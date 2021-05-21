@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mesh.backend.mapper.UsersMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mesh.backend.entity.Users">
+        <id column="Id" property="Id" />
+        <result column="Nickname" property="Nickname" />
+        <result column="Email" property="Email" />
+        <result column="PasswordDigest" property="PasswordDigest" />
+        <result column="PasswordSalt" property="PasswordSalt" />
+        <result column="RememberDigest" property="RememberDigest" />
+        <result column="Avatar" property="Avatar" />
+        <result column="ColorPreference" property="ColorPreference" />
+        <result column="LayoutPreference" property="LayoutPreference" />
+        <result column="RevealedPreference" property="RevealedPreference" />
+        <result column="CreatedTime" property="CreatedTime" />
+        <result column="UpdatedTime" property="UpdatedTime" />
+        <result column="Gender" property="Gender" />
+        <result column="Status" property="Status" />
+        <result column="Description" property="Description" />
+        <result column="Address" property="Address" />
+        <result column="Birthday" property="Birthday" />
+    </resultMap>
+
+</mapper>
