@@ -1,9 +1,0 @@
-server:
-  port: 8080
-
-spring:
-  datasource:
-    username: nopegeo
-    password: 1234
-    url: jdbc:mysql://localhost:3306/test
-    schema: classpath:db/script.sql
