@@ -13,4 +13,5 @@ public class UserRequestData {
     public String birthday;
     public String oldPassword;
     public String password;
+    public String token;
 }
