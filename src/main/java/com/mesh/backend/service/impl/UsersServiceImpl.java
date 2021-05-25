@@ -10,12 +10,17 @@ import com.mesh.backend.mapper.UsersMapper;
 import com.mesh.backend.service.IUsersService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.catalina.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Random;
+
+import static org.springframework.util.StringUtils.hasLength;
 
 /**
  * <p>
@@ -27,6 +32,32 @@ import java.util.ArrayList;
  */
 @Service
 public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements IUsersService {
+    @Autowired
+    private RedisServiceImpl redisService;
+
+    @Value("${spring.redis.key.expire.seconds}")
+    private Long RESET_AUTH_CODE_EXPIRE_SECONDS;
+
+
+    @Override
+    public String generateResetAuthCode(Users user){
+        StringBuilder stringBuilder = new StringBuilder();
+        Random random = new Random();
+        while(true) {
+            for (int i = 0; i < 10; i++) {
+                stringBuilder.append(random.nextInt(10));
+            }
+            String result = redisService.get(stringBuilder.toString());
+            if (!hasLength(result)) {
+                break;
+            }
+            stringBuilder.setLength(0);
+        }
+        String authCode = stringBuilder.toString();
+        redisService.set(authCode, user.getEmail());
+        redisService.expire(authCode, RESET_AUTH_CODE_EXPIRE_SECONDS);
+        return authCode;
+    }
 
     @Override
     public Users getUserByUsername(String username) {

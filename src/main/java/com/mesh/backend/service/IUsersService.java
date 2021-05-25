@@ -17,6 +17,8 @@ import java.util.ArrayList;
  */
 public interface IUsersService extends IService<Users> {
 
+    String generateResetAuthCode(Users user);
+
     Users getUserByUsername(String username);
 
     Users saveNewUser(UserData userData);
