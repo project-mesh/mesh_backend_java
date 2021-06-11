@@ -120,6 +120,9 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         if(requestData.description != null){
             user.setDescription(requestData.description);
         }
+        if(requestData.avatar != null){
+            user.setAvatar(requestData.avatar);
+        }
         return updateById(user)? user :null;
     }
 
