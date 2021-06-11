@@ -14,4 +14,5 @@ public class UserRequestData {
     public String oldPassword;
     public String password;
     public String avatar;
+    public String token;
 }

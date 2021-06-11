@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8088
 
 spring:
   datasource:
@@ -7,3 +7,22 @@ spring:
     password: 1234
     url: jdbc:mysql://localhost:3306/test
     schema: classpath:db/script.sql
+  mail:
+    host: smtp.163.com
+    username: meshproject
+    password: UBNZLCNYVMSPFPOW
+    default-encoding: utf-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+  redis:
+    host: localhost
+    password: zzddw20210524Z
+    port: 6379
+    key:
+      expire:
+        seconds: 600
