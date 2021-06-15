@@ -87,12 +87,13 @@ public class TeamsServiceImpl extends ServiceImpl<TeamsMapper, Teams> implements
 
     @Override
     public ArrayList<TeamData> getUserTeams(int userId) {
-        QueryWrapper<Teams> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(Teams::getAdminId, userId);
-        ArrayList<Teams> teams = new ArrayList<>(list(queryWrapper));
+        QueryWrapper<Cooperations> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(Cooperations::getUserId, userId);
+        ArrayList<Cooperations> cooperations = new ArrayList<>(cooperationsService.list(queryWrapper));
         ArrayList<TeamData> teamData = new ArrayList<>();
-        for(Teams t: teams){
-            String adminName = usersService.getById(t.getAdminId()).getEmail();
+        for(Cooperations c: cooperations){
+            Teams t = getById(c.getTeamId());
+            String adminName = usersService.getById(c.getUserId()).getEmail();
             teamData.add(new TeamData(t, adminName));
         }
         return teamData;
