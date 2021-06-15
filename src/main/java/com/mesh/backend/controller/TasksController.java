@@ -156,10 +156,10 @@ public class TasksController {
             return new BaseReturnValue(2, baseData);
         }
         Projects project = projectsService.getById(requestData.projectId);
-        if(project == null){
-            BaseData baseData = new BaseData("Project does not exist.");
-            return new BaseReturnValue(301, baseData);
-        }
+//        if(project == null){
+//            BaseData baseData = new BaseData("Project does not exist.");
+//            return new BaseReturnValue(301, baseData);
+//        }
         if(!projectsService.checkProjectAdmin(project, users.getId())
                 && !tasksService.checkTaskPrincipal(users.getId(), requestData.taskId)){
             BaseData baseData = new BaseData("Permission denied.");
