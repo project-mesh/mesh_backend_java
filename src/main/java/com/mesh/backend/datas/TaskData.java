@@ -22,12 +22,13 @@ public class TaskData {
     public String founder;
     public String principal;
     public List<SubTaskData> subTasks;
+    public int projectId;
 
     /**
      * 基本构造函数
      */
     public TaskData(int taskId, String taskName, boolean isFinished, int priority, LocalDateTime createTime,
-                    LocalDateTime deadline, String description, String founder, String principal, List<SubTaskData> subTasks) {
+                    LocalDateTime deadline, String description, String founder, String principal, List<SubTaskData> subTasks, int projectId) {
         this.taskId = taskId;
         this.taskName = taskName;
         this.isFinished = isFinished;
@@ -38,6 +39,7 @@ public class TaskData {
         this.founder = founder;
         this.principal = principal;
         this.subTasks = subTasks;
+        this.projectId = projectId;
     }
 
 
@@ -60,5 +62,6 @@ public class TaskData {
         this.founder = founder;
         this.principal = principal;
         this.subTasks = subTasks;
+        this.projectId = tasks.getBoardId();
     }
 }
