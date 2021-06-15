@@ -28,6 +28,9 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.4.0'
     // https://mvnrepository.com/artifact/org.springframework.session/spring-session-core
     compile group: 'org.springframework.session', name: 'spring-session-core', version: '2.4.1'
+    // Mail & Redis
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.5.0'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '2.4.5'
 }
 
 test {

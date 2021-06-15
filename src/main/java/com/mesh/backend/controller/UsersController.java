@@ -6,10 +6,9 @@ import com.mesh.backend.entity.Users;
 import com.mesh.backend.helper.AdminCheckHelper;
 import com.mesh.backend.helper.PasswordVerifier;
 import com.mesh.backend.helper.SessionVerifier;
-import com.mesh.backend.service.impl.CooperationsServiceImpl;
-import com.mesh.backend.service.impl.TeamsServiceImpl;
-import com.mesh.backend.service.impl.UsersServiceImpl;
+import com.mesh.backend.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.session.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashSet;
+
+import static org.springframework.util.StringUtils.hasLength;
 
 /**
  * <p>
@@ -37,7 +38,13 @@ public class UsersController {
     private UsersServiceImpl usersService;
 
     @Autowired
+    private RedisServiceImpl redisService;
+
+    @Autowired
     private CooperationsServiceImpl cooperationsService;
+
+    @Autowired
+    private MailServiceImpl mailService;
 
     @Autowired
     private TeamsServiceImpl teamsService;
@@ -143,6 +150,51 @@ public class UsersController {
         }
         BaseData data = new BaseData(true,"");
         return new BaseReturnValue(0, data);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/user/find-password", method = RequestMethod.POST)
+    public Object findPassword(@RequestBody UserRequestData requestData){
+        Users user = usersService.getUserByUsername(requestData.username);
+        if(user == null){
+            BaseData data = new BaseData("Invalid username.");
+            return new BaseReturnValue(1, data);
+        }
+        String authCode = usersService.generateResetAuthCode(user);
+        String receiver = user.getEmail();
+        String title = "【Mesh】您的 Mesh 账户密码正被请求重置";
+        String content = "验证码：" +
+                authCode +
+                "\n本验证码 10 分钟内有效。为保证您的账户安全，请勿将验证码提供给他人。" +
+                "如果您没有请求过重置密码，请忽略本邮件。";
+        try {
+            mailService.send(receiver, title, content);
+        }
+        catch (MailException e){
+            BaseData data = new BaseData("Auth Code Mailing Failure.");
+            return new BaseReturnValue(1, data);
+        }
+        BaseData baseData = new BaseData(true, "");
+        return new BaseReturnValue(0, baseData);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/user/reset-password", method = RequestMethod.POST)
+    public Object resetPassword(@RequestBody UserRequestData requestData){
+        String username = redisService.get(requestData.token);
+        if (!hasLength(username)) {
+            BaseData data = new BaseData("Wrong or Expired Auth Code.");
+            return new BaseReturnValue(1, data);
+        }
+        Users user = usersService.getUserByUsername(username);
+        boolean updateResult = usersService.updateUserPassword(user, requestData);
+        if(!updateResult){
+            BaseData baseData =new BaseData("Unexpected error.");
+            return new BaseReturnValue(1, baseData);
+        }
+        redisService.remove(requestData.token);
+        BaseData baseData = new BaseData(true, "");
+        return new BaseReturnValue(0, baseData);
     }
 
     @ResponseBody
